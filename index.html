@@ -35,6 +35,9 @@
     link.textContent = `Open ${target}`;
     link.hidden = false;
     status.textContent = "If nothing happened, click the link.";
+    // The app taking the focus means the link opened: the tab has done its job. A tab still in front
+    // (no app, or the browser asking first) stays, with the link to click.
+    window.addEventListener("blur", () => window.close(), { once: true });
     location.replace(target);
   }
 </script>
