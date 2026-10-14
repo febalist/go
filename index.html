@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Open link</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.5 system-ui, sans-serif; margin: 0; min-height: 100vh; display: grid; place-items: center; }
+  a { font-size: 18px; }
+  p { color: GrayText; }
+</style>
+</head>
+<body>
+<main>
+  <p id="status">Opening…</p>
+  <a id="link" hidden>Open</a>
+</main>
+<script>
+  // Opens the custom-scheme link carried after `#`: the fragment never reaches the server.
+  // Only these schemes are opened, so the page is not an open redirect.
+  const ALLOWED_SCHEMES = ["claude:"];
+  const target = decodeURIComponent(location.hash.slice(1));
+  const status = document.getElementById("status");
+  const link = document.getElementById("link");
+  let scheme = null;
+  try {
+    scheme = new URL(target).protocol;
+  } catch {}
+  if (!ALLOWED_SCHEMES.includes(scheme)) {
+    status.textContent = target ? `Not an allowed link: ${target}` : "No link given.";
+  } else {
+    link.href = target;
+    link.textContent = `Open ${target}`;
+    link.hidden = false;
+    status.textContent = "If nothing happened, click the link.";
+    location.replace(target);
+  }
+</script>
+</body>
+</html>
